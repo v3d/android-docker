@@ -4,7 +4,7 @@ MAINTAINER Martial Maillot "martial.maillot@gmail.com"
 
 ENV ANDROID_VERSION=24.4.1
 ENV ANDROID_API_LEVEL=25
-ENV ANDROID_BUILD_TOOLS_VERSION=25.2.3
+ENV ANDROID_BUILD_TOOLS_VERSION=25.0.0
 
 # Install Java 8
 RUN apt-get update && \
@@ -28,17 +28,20 @@ COPY tools /opt/tools
 ENV PATH ${PATH}:/opt/tools
 
 # Install Android SDK
-RUN cd /opt
-RUN wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/android-sdk_r$ANDROID_VERSION-linux.tgz
-RUN tar xzf android-sdk.tgz && \
-  rm -f android-sdk.tgz && \
-  chown -R root.root android-sdk-linux
+RUN cd /opt && wget --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r$ANDROID_VERSION-linux.tgz && \
+  tar xzf android-sdk.tgz && \
+  rm -f android-sdk.tgz
 
-RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter platform-tools"
-RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter android-$ANDROID_API_LEVEL"
-RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION"
-RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-m2repository"
-RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-support"
+# Copy licenses
+COPY licenses /opt/android-sdk-linux/licenses
+
+RUN chmod +x /opt/tools/android-accept-licenses.sh
+RUN ls -al /opt/tools/
+RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter platform-tools"
+RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter android-$ANDROID_API_LEVEL"
+RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION"
+RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-m2repository"
+RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-support"
 
 # Cleaning
 RUN apt-get clean
