@@ -23,6 +23,10 @@ RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 
+# Copy install tools
+COPY tools /opt/tools
+ENV PATH ${PATH}:/opt/tools
+
 # Install Android SDK
 RUN cd /opt
 RUN wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/android-sdk_r$ANDROID_VERSION-linux.tgz
@@ -30,11 +34,11 @@ RUN tar xzf android-sdk.tgz && \
   rm -f android-sdk.tgz && \
   chown -R root.root android-sdk-linux
 
-RUN echo y | android update sdk --no-ui --all --filter platform-tools
-RUN echo y | android update sdk --no-ui --all --filter android-$ANDROID_API_LEVEL
-RUN echo y | android update sdk --no-ui --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION
-RUN echo y | android update sdk --no-ui --all --filter extra-android-m2repository
-RUN echo y | android update sdk --no-ui --all --filter extra-android-support
+RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter platform-tools"
+RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter android-$ANDROID_API_LEVEL"
+RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION"
+RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-m2repository"
+RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-support"
 
 # Cleaning
 RUN apt-get clean
