@@ -2,6 +2,10 @@ FROM ubuntu:14.04
 
 MAINTAINER Martial Maillot "martial.maillot@gmail.com"
 
+ENV ANDROID_VERSION=24.4.1
+ENV ANDROID_API_LEVEL=25
+ENV ANDROID_BUILD_TOOLS_VERSION=25.2.3
+
 # Install Java 8
 RUN apt-get update && \
   apt-get install -y software-properties-common && \
@@ -21,12 +25,16 @@ ENV PATH ${PATH}:/opt/tools
 
 # Install Android SDK
 RUN cd /opt
-RUN wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
+RUN wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/android-sdk_r$ANDROID_VERSION-linux.tgz
 RUN tar xzf android-sdk.tgz && \
   rm -f android-sdk.tgz && \
   chown -R root.root android-sdk-linux
-RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools"
-RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools,build-tools-25.0.0,android-25,addon-google_apis_x86-google-21,extra-android-support,extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services"
+
+RUN echo y | android update sdk --no-ui --all --filter platform-tools
+RUN echo y | android update sdk --no-ui --all --filter android-$ANDROID_API_LEVEL
+RUN echo y | android update sdk --no-ui --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION
+RUN echo y | android update sdk --no-ui --all --filter extra-android-m2repository
+RUN echo y | android update sdk --no-ui --all --filter extra-android-support
 
 # Setup environment
 ENV ANDROID_HOME /opt/android-sdk-linux
