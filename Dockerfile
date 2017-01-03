@@ -20,12 +20,13 @@ COPY tools /opt/tools
 ENV PATH ${PATH}:/opt/tools
 
 # Install Android SDK
-RUN cd /opt && wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/repository/tools_r25.2.3-linux.zip && \
-  tar xzf android-sdk.tgz && \
+RUN cd /opt
+RUN wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
+RUN tar xzf android-sdk.tgz && \
   rm -f android-sdk.tgz && \
-  chown -R root.root android-sdk-linux && \
-  /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools" && \
-  /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools,build-tools-25.0.0,android-25,addon-google_apis_x86-google-21,extra-android-support,extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services"
+  chown -R root.root android-sdk-linux
+RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools"
+RUN /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools,build-tools-25.0.0,android-25,addon-google_apis_x86-google-21,extra-android-support,extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services"
 
 # Setup environment
 ENV ANDROID_HOME /opt/android-sdk-linux
