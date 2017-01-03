@@ -19,9 +19,9 @@ RUN apt-get update && \
 # Install 32 bits lib for android + git/python/curl
 RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 python curl libqt5widgets5 && apt-get clean && rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy install tools
-COPY tools /opt/tools
-ENV PATH ${PATH}:/opt/tools
+# Setup environment
+ENV ANDROID_HOME /opt/android-sdk-linux
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 
 # Install Android SDK
 RUN cd /opt
@@ -35,10 +35,6 @@ RUN echo y | android update sdk --no-ui --all --filter android-$ANDROID_API_LEVE
 RUN echo y | android update sdk --no-ui --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION
 RUN echo y | android update sdk --no-ui --all --filter extra-android-m2repository
 RUN echo y | android update sdk --no-ui --all --filter extra-android-support
-
-# Setup environment
-ENV ANDROID_HOME /opt/android-sdk-linux
-ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 
 # Cleaning
 RUN apt-get clean
