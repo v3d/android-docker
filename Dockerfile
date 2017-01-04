@@ -28,9 +28,11 @@ COPY tools /opt/tools
 ENV PATH ${PATH}:/opt/tools
 
 # Install Android SDK
-RUN cd /opt && wget --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r$ANDROID_VERSION-linux.tgz && \
+RUN cd /opt && wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/android-sdk_r$ANDROID_VERSION-linux.tgz && \
   tar xzf android-sdk.tgz && \
-  rm -f android-sdk.tgz
+  rm -f android-sdk.tgz && \
+  chown -R root.root android-sdk-linux && \
+  chmod -R 777 /opt/android-sdk-linux
 
 # Copy licenses
 COPY licenses /opt/android-sdk-linux/licenses
