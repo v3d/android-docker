@@ -44,6 +44,8 @@ RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android 
 RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION"
 RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-m2repository"
 RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-support"
+RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-google-m2repository"
+RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-google-google_play_services"
 
 # Cleaning
 RUN apt-get clean
