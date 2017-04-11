@@ -4,7 +4,7 @@ MAINTAINER Martial Maillot "martial.maillot@gmail.com"
 
 ENV ANDROID_VERSION=24.4.1
 ENV ANDROID_API_LEVEL=25
-ENV ANDROID_BUILD_TOOLS_VERSION=25.0.0
+ENV ANDROID_BUILD_TOOLS_VERSION=25.0.2
 
 # Install Java 8
 RUN apt-get update && \
