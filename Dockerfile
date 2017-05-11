@@ -1,51 +1,53 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
 MAINTAINER Martial Maillot "martial.maillot@gmail.com"
 
-ENV ANDROID_VERSION=24.4.1
+ENV ANDROID_TOOLS=25.2.5
 ENV ANDROID_API_LEVEL=25
 ENV ANDROID_BUILD_TOOLS_VERSION=25.0.2
 
-# Install Java 8
-RUN apt-get update && \
-  apt-get install -y software-properties-common && \
-  add-apt-repository -y ppa:webupd8team/java && \
-  (echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections) && \
-  apt-get update && \
-  apt-get install -y oracle-java8-installer && \
-  apt-get clean && \
-  rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Install required tools
+RUN apt-get update -qq
 
-# Install 32 bits lib for android + git/python/curl
-RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 python curl libqt5widgets5 && apt-get clean && rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Dependencies to execute Android builds
+RUN dpkg --add-architecture i386
+RUN apt-get update -qq
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y expect git python curl wget sudo unzip zip openjdk-8-jdk libc6:i386 libstdc++6:i386 libgcc1:i386 libncurses5:i386 libz1:i386
+RUN rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Setup environment
 ENV ANDROID_HOME /opt/android-sdk-linux
-ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-
-# Copy install tools
-COPY tools /opt/tools
-ENV PATH ${PATH}:/opt/tools
 
 # Install Android SDK
-RUN cd /opt && wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/android-sdk_r$ANDROID_VERSION-linux.tgz && \
-  tar xzf android-sdk.tgz && \
-  rm -f android-sdk.tgz && \
-  chown -R root.root android-sdk-linux && \
-  chmod -R 777 /opt/android-sdk-linux
+RUN cd /opt \
+    && wget -q https://dl.google.com/android/repository/tools_r$ANDROID_TOOLS-linux.zip -O android-sdk-tools.zip \
+    && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
+    && rm -f android-sdk-tools.zip
 
-# Copy licenses
-COPY licenses /opt/android-sdk-linux/licenses
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
 
-RUN chmod +x /opt/tools/android-accept-licenses.sh
-RUN ls -al /opt/tools/
-RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter platform-tools"
-RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter android-$ANDROID_API_LEVEL"
-RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION"
-RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-m2repository"
-RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-support"
-RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-google-m2repository"
-RUN /opt/tools/android-accept-licenses.sh "/opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-google-google_play_services"
+# Accept "android-sdk-license" before installing components, no need to echo y for each component
+# License is valid for all the standard components in versions installed from this file
+# Non-standard components: MIPS system images, preview versions, GDK (Google Glass) and Android Google TV require separate licenses, not accepted there
+RUN mkdir -p ${ANDROID_HOME}/licenses
+RUN echo 8933bad161af4178b1185d1a37fbf41ea5269c55 > ${ANDROID_HOME}/licenses/android-sdk-license
+
+# Platform tools
+RUN sdkmanager "platform-tools"
+
+# SDK
+RUN sdkmanager "platforms;android-$ANDROID_API_LEVEL"
+
+# build tools
+RUN sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION"
+
+# Extras
+RUN sdkmanager "extras;android;m2repository"
+RUN sdkmanager "extras;google;m2repository"
+RUN sdkmanager "extras;google;google_play_services"
+
+# If you want to chekc if packages has been installed or list all packages
+# RUN sdkmanager --list
 
 # Cleaning
 RUN apt-get clean
