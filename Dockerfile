@@ -22,7 +22,8 @@ ENV ANDROID_HOME /opt/android-sdk-linux
 RUN cd /opt \
     && wget -q https://dl.google.com/android/repository/tools_r$ANDROID_TOOLS-linux.zip -O android-sdk-tools.zip \
     && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
-    && rm -f android-sdk-tools.zip
+    && rm -f android-sdk-tools.zip \
+    && chmod -R 777 ${ANDROID_HOME}
 
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
 
