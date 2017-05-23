@@ -4,7 +4,7 @@ MAINTAINER Martial Maillot "martial.maillot@gmail.com"
 
 ENV ANDROID_TOOLS=25.2.5
 ENV ANDROID_API_LEVEL=25
-ENV ANDROID_BUILD_TOOLS_VERSION=25.0.2
+ENV ANDROID_BUILD_TOOLS_VERSION=25.0.3
 
 # Install required tools
 RUN apt-get update -qq
