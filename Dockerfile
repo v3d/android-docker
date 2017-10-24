@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 MAINTAINER Martial Maillot "martial.maillot@gmail.com"
 
-ENV ANDROID_TOOLS=26.1.1
+ENV ANDROID_TOOLS_VERSION=3859397
 ENV ANDROID_API_LEVEL=26
 ENV ANDROID_BUILD_TOOLS_VERSION=26.0.2
 
@@ -20,7 +20,7 @@ ENV ANDROID_HOME /opt/android-sdk-linux
 
 # Install Android SDK
 RUN cd /opt \
-    && wget -q https://dl.google.com/android/repository/tools_r$ANDROID_TOOLS-linux.zip -O android-sdk-tools.zip \
+    && wget -q https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_TOOLS_VERSION.zip -O android-sdk-tools.zip \
     && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
     && rm -f android-sdk-tools.zip \
     && chmod -R 777 ${ANDROID_HOME}
