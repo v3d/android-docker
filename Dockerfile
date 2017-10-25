@@ -32,7 +32,7 @@ ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}
 # Non-standard components: MIPS system images, preview versions, GDK (Google Glass) and Android Google TV require separate licenses, not accepted there
 RUN mkdir -p ${ANDROID_HOME}/licenses
 RUN echo -e "8933bad161af4178b1185d1a37fbf41ea5269c55\n\nd56f5187479451eabf01fb78af6dfcb131a6481e" > ${ANDROID_HOME}/licenses/android-sdk-license
-RUN yes | sdkmanager --licenses
+RUN sdkmanager --update && yes | sdkmanager --licenses
 
 # Platform tools
 RUN sdkmanager "platform-tools"
@@ -41,7 +41,13 @@ RUN sdkmanager "platform-tools"
 RUN sdkmanager "platforms;android-$ANDROID_API_LEVEL"
 
 # build tools
-RUN sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION"
+RUN sdkmanager \
+  "build-tools;25.0.0" \
+  "build-tools;25.0.1" \
+  "build-tools;25.0.2" \
+  "build-tools;25.0.3" \
+  "build-tools;26.0.1" \
+  "build-tools;26.0.2"
 
 # Extras
 RUN sdkmanager "extras;android;m2repository"
