@@ -41,13 +41,7 @@ RUN sdkmanager "platform-tools"
 RUN sdkmanager "platforms;android-$ANDROID_API_LEVEL"
 
 # build tools
-RUN sdkmanager \
-  "build-tools;25.0.0" \
-  "build-tools;25.0.1" \
-  "build-tools;25.0.2" \
-  "build-tools;25.0.3" \
-  "build-tools;26.0.1" \
-  "build-tools;26.0.2"
+RUN sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION"
 
 # Extras
 RUN sdkmanager "extras;android;m2repository"
