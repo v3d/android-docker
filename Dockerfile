@@ -41,10 +41,14 @@ RUN yes | sdkmanager --licenses && sdkmanager --update
 RUN sdkmanager "platform-tools"
 
 # SDK
-RUN sdkmanager "platforms;android-$ANDROID_API_LEVEL"
+#RUN sdkmanager "platforms;android-$ANDROID_API_LEVEL"
+RUN sdkmanager "platforms;android-28"
+RUN sdkmanager "platforms;android-27"
 
 # build tools
-RUN sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION"
+#RUN sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION"
+RUN sdkmanager "build-tools;28.0.1"
+RUN sdkmanager "build-tools;27.0.3"
 
 # Extras
 RUN sdkmanager "extras;android;m2repository"
