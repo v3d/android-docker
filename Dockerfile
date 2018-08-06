@@ -51,6 +51,7 @@ RUN yes | sdkmanager \
     "build-tools;27.0.0" \
     "build-tools;26.0.2" \
     "build-tools;26.0.1" \
+    "extras;android;support" \
     "extras;android;m2repository" \
     "extras;google;m2repository" \
     "extras;google;google_play_services" \
@@ -60,8 +61,9 @@ RUN yes | sdkmanager \
     "add-ons;addon-google_apis-google-22" \
     "add-ons;addon-google_apis-google-21"
 
+
 # If you want to check if packages has been installed or list all packages
-# RUN sdkmanager --list
+RUN sdkmanager --list
 
 # Cleaning
 RUN apt-get clean
