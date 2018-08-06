@@ -29,7 +29,6 @@ ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}
 # License is valid for all the standard components in versions installed from this file
 # Non-standard components: MIPS system images, preview versions, GDK (Google Glass) and Android Google TV require separate licenses, not accepted there
 RUN mkdir ~/.android && echo '### User Sources for Android SDK Manager' > ~/.android/repositories.cfg
-RUN yes | sdkmanager --licenses && sdkmanager --update
 
 # Platform tools
 RUN sdkmanager "tools" "platform-tools"
@@ -60,6 +59,7 @@ RUN yes | sdkmanager \
     "add-ons;addon-google_apis-google-22" \
     "add-ons;addon-google_apis-google-21"
 
+RUN yes | sdkmanager --licenses && sdkmanager --update
 
 # If you want to check if packages has been installed or list all packages
 RUN sdkmanager --list
