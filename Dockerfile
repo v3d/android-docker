@@ -1,10 +1,8 @@
 FROM ubuntu:16.04
 
-MAINTAINER Martial Maillot "martial.maillot@gmail.com"
+MAINTAINER V3D company "https://www.v3d.fr"
 
 ENV ANDROID_TOOLS_VERSION=4333796
-ENV ANDROID_API_LEVEL=28
-ENV ANDROID_BUILD_TOOLS_VERSION=28.0.1
 
 # Install required tools
 RUN apt-get update -qq
@@ -27,35 +25,42 @@ RUN cd /opt \
 
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
 
-# Accept "android-sdk-license" before installing components, no need to echo y for each component
+# Accept licenses before installing components, no need to echo y for each component
 # License is valid for all the standard components in versions installed from this file
 # Non-standard components: MIPS system images, preview versions, GDK (Google Glass) and Android Google TV require separate licenses, not accepted there
-# RUN mkdir -p ${ANDROID_HOME}/licenses
-# RUN echo -e "8933bad161af4178b1185d1a37fbf41ea5269c55\n\nd56f5187479451eabf01fb78af6dfcb131a6481e" > ${ANDROID_HOME}/licenses/android-sdk-license
-# RUN yes | sdkmanager --licenses
 RUN mkdir ~/.android && echo '### User Sources for Android SDK Manager' > ~/.android/repositories.cfg
-
 RUN yes | sdkmanager --licenses && sdkmanager --update
 
 # Platform tools
-RUN sdkmanager "platform-tools"
+RUN sdkmanager "tools" "platform-tools"
 
-# SDK
-#RUN sdkmanager "platforms;android-$ANDROID_API_LEVEL"
-RUN sdkmanager "platforms;android-28"
-RUN sdkmanager "platforms;android-27"
+# SDKs
+# Please keep these in descending order!
+# The `yes` is for accepting all non-standard tool licenses.
 
-# build tools
-#RUN sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION"
-RUN sdkmanager "build-tools;28.0.1"
-RUN sdkmanager "build-tools;27.0.3"
+# Please keep all sections in descending order!
+RUN yes | sdkmanager \
+    "platforms;android-28" \
+    "platforms;android-27" \
+    "platforms;android-26" \
+    "build-tools;28.0.1" \
+    "build-tools;28.0.0" \
+    "build-tools;27.0.3" \
+    "build-tools;27.0.2" \
+    "build-tools;27.0.1" \
+    "build-tools;27.0.0" \
+    "build-tools;26.0.2" \
+    "build-tools;26.0.1" \
+    "extras;android;m2repository" \
+    "extras;google;m2repository" \
+    "extras;google;google_play_services" \
+    "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
+    "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.1" \
+    "add-ons;addon-google_apis-google-23" \
+    "add-ons;addon-google_apis-google-22" \
+    "add-ons;addon-google_apis-google-21"
 
-# Extras
-RUN sdkmanager "extras;android;m2repository"
-RUN sdkmanager "extras;google;m2repository"
-RUN sdkmanager "extras;google;google_play_services"
-
-# If you want to chekc if packages has been installed or list all packages
+# If you want to check if packages has been installed or list all packages
 # RUN sdkmanager --list
 
 # Cleaning
