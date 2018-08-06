@@ -51,7 +51,6 @@ RUN yes | sdkmanager \
     "build-tools;27.0.0" \
     "build-tools;26.0.2" \
     "build-tools;26.0.1" \
-    "extras;android;support" \
     "extras;android;m2repository" \
     "extras;google;m2repository" \
     "extras;google;google_play_services" \
