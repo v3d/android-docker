@@ -14,7 +14,7 @@ To update for a new version, in the Dockerfile, change the 3 environement variab
  * ANDROID_API_LEVEL: The platform API level to target
  * ANDROID_BUILD_TOOLS_VERSION: the build tools to use (can be upgraded during build automatically)
 
-### Test
+### Test 
 
 Then, you can build a new image to test it
 
