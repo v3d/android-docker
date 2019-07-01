@@ -34,7 +34,7 @@ RUN echo d56f5187479451eabf01fb78af6dfcb131a6481e >> $ANDROID_HOME/licenses/andr
 RUN echo 24333f8a63b6825ea9c5514f83c2829b004d1fee >> $ANDROID_HOME/licenses/android-sdk-license
 RUN echo 84831b9409646a918e30573bab4c9c91346d8abd > $ANDROID_HOME/licenses/android-sdk-preview-license
 
-RUN yes | sdkmanager --licenses && sdkmanager --update
+RUN yes | sdkmanager --licenses && yes | sdkmanager --update
 
 # Platform tools
 RUN sdkmanager "tools" "platform-tools"
