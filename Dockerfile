@@ -45,9 +45,11 @@ RUN sdkmanager "tools" "platform-tools"
 # Please keep all sections in descending order!
 RUN yes | sdkmanager \
     "platform-tools" \
+    "platforms;android-29" \
     "platforms;android-28" \
     "platforms;android-27" \
-    "platforms;android-26" \    
+    "platforms;android-26" \   
+    "build-tools;29.0.0" \   
     "build-tools;28.0.3" \
     "build-tools;28.0.2" \
     "build-tools;28.0.1" \
