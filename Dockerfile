@@ -50,7 +50,8 @@ RUN yes | sdkmanager \
     "platforms;android-29" \
     "platforms;android-28" \
     "platforms;android-27" \
-    "platforms;android-26" \   
+    "platforms;android-26" \  
+    "build-tools;29.0.2" \
     "build-tools;29.0.1" \
     "build-tools;29.0.0" \   
     "build-tools;28.0.3" \
